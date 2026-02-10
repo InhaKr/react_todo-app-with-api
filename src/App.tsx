@@ -167,7 +167,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const updateTitle = (id: number, title: string) => {
+  const updateTitle = (id: number, newTitle: string) => {
     hideError();
 
     let prevTitle = '';
@@ -177,7 +177,7 @@ export const App: React.FC = () => {
         if (todo.id === id) {
           prevTitle = todo.title; // 🔥 сохр старое значение
 
-          return { ...todo, title };
+          return { ...todo, title: newTitle };
         }
 
         return todo;
@@ -186,7 +186,7 @@ export const App: React.FC = () => {
 
     setLoadingIds(prev => [...prev, id]);
 
-    updateTodo(id, { title })
+    updateTodo(id, { title: newTitle })
       .then(updated => {
         setTodos(prev =>
           prev.map(todo => (todo.id === updated.id ? updated : todo)),

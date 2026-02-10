@@ -40,6 +40,7 @@ export const TodoItem: React.FC<Props> = ({
 
     if (!trimmed) {
       onDelete(todo.id);
+
       // setIsEditing(false);
       return;
     }
@@ -79,13 +80,16 @@ export const TodoItem: React.FC<Props> = ({
       className={`todo ${todo.completed ? 'completed' : ''} ${isEditing ? 'editing' : ''}`}
     >
       <div className="todo__view">
-        <label className="todo__status-label">
+        <label className="todo__status-label ">
           <input
             type="checkbox"
             className="todo__status"
             checked={todo.completed}
             disabled={isLoading}
             onChange={() => onToggle(todo)}
+            aria-label={
+              todo.completed ? 'Mark as incomplete' : 'Mark as complete'
+            }
           />
         </label>
 
