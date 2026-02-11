@@ -7,12 +7,5 @@ interface Props {
 }
 
 export const TempTodoItem: React.FC<Props> = ({ tempTodo }) => {
-  return (
-    <TodoItem
-      todo={tempTodo}
-      isLoading={true} // показываем загрузчик
-      onToggle={() => {}}
-      onDelete={() => {}}
-    />
-  );
+  return <TodoItem todo={tempTodo} isLoading={true} />;
 };

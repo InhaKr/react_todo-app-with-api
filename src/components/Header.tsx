@@ -1,4 +1,5 @@
 import React, { RefObject } from 'react';
+import cn from 'classnames';
 
 interface Props {
   title: string;
@@ -24,7 +25,7 @@ export const Header: React.FC<Props> = ({
       <form onSubmit={onSubmit}>
         <button
           type="button"
-          className={`todoapp__toggle-all ${isAllCompleted ? 'active' : ''}`}
+          className={cn('todoapp__toggle-all', { active: isAllCompleted })}
           data-cy="ToggleAllButton"
           onClick={onToggleAll}
         ></button>

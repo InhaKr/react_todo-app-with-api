@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Todo } from '../types/Todo';
+import cn from 'classnames';
 
 interface Props {
   todo: Todo;
-  isLoading: boolean;
-  onToggle: (todo: Todo) => void;
-  onDelete: (id: number) => void;
-  onUpdate: (id: number, title: string) => void;
+  isLoading?: boolean;
+  onToggle?: (todo: Todo) => void;
+  onDelete?: (id: number) => void;
+  onUpdate?: (id: number, title: string) => void;
 }
 
 export const TodoItem: React.FC<Props> = ({
@@ -39,17 +40,15 @@ export const TodoItem: React.FC<Props> = ({
     setIsEditing(false);
 
     if (!trimmed) {
-      onDelete(todo.id);
+      onDelete?.(todo.id);
 
       // setIsEditing(false);
       return;
     }
 
     if (trimmed !== todo.title) {
-      onUpdate(todo.id, trimmed);
+      onUpdate?.(todo.id, trimmed);
     }
-
-    // setIsEditing(false);
   };
 
   const handleCancel = () => {
@@ -75,9 +74,18 @@ export const TodoItem: React.FC<Props> = ({
     }
   };
 
+  const handleDoubleClick = () => {
+    if (!isLoading) {
+      setIsEditing(true);
+    }
+  };
+
   return (
     <li
-      className={`todo ${todo.completed ? 'completed' : ''} ${isEditing ? 'editing' : ''}`}
+      className={cn('todo', {
+        completed: todo.completed,
+        editing: isEditing,
+      })}
     >
       <div className="todo__view">
         <label className="todo__status-label ">
@@ -86,7 +94,7 @@ export const TodoItem: React.FC<Props> = ({
             className="todo__status"
             checked={todo.completed}
             disabled={isLoading}
-            onChange={() => onToggle(todo)}
+            onChange={() => onToggle?.(todo)}
             aria-label={
               todo.completed ? 'Mark as incomplete' : 'Mark as complete'
             }
@@ -105,14 +113,7 @@ export const TodoItem: React.FC<Props> = ({
           />
         ) : (
           <>
-            <span
-              className="todo__title"
-              onDoubleClick={() => {
-                if (!isLoading) {
-                  setIsEditing(true);
-                }
-              }}
-            >
+            <span className="todo__title" onDoubleClick={handleDoubleClick}>
               {todo.title}
             </span>
 
@@ -120,7 +121,7 @@ export const TodoItem: React.FC<Props> = ({
               type="button"
               className="todo__remove"
               disabled={isLoading}
-              onClick={() => onDelete(todo.id)}
+              onClick={() => onDelete?.(todo.id)}
             >
               ×
             </button>

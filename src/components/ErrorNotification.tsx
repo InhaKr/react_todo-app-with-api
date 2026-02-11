@@ -1,4 +1,5 @@
 import React from 'react';
+import cn from 'classnames';
 
 interface Props {
   error: string;
@@ -9,7 +10,9 @@ export const ErrorNotification: React.FC<Props> = ({ error, onClose }) => {
   return (
     <div
       data-cy="ErrorNotification"
-      className={`notification is-danger is-light ${error ? '' : 'hidden'}`}
+      className={cn('notification is-danger is-light', {
+        hidden: !error,
+      })}
     >
       <button data-cy="HideErrorButton" className="delete" onClick={onClose} />
       {error}

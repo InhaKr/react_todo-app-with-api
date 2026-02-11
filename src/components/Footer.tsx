@@ -1,4 +1,5 @@
 import React from 'react';
+import cn from 'classnames';
 
 enum Filter {
   All = 'all',
@@ -7,9 +8,19 @@ enum Filter {
 }
 
 const FILTERS = [
-  { value: Filter.All, label: 'All', href: '#/' },
-  { value: Filter.Active, label: 'Active', href: '#/active' },
-  { value: Filter.Completed, label: 'Completed', href: '#/completed' },
+  { value: Filter.All, label: 'All', href: '#/', dataCy: 'FilterLinkAll' },
+  {
+    value: Filter.Active,
+    label: 'Active',
+    href: '#/active',
+    dataCy: 'FilterLinkActive',
+  },
+  {
+    value: Filter.Completed,
+    label: 'Completed',
+    href: '#/completed',
+    dataCy: 'FilterLinkCompleted',
+  },
 ];
 
 interface Props {
@@ -33,18 +44,14 @@ export const Footer: React.FC<Props> = ({
         {activeTodosCount} items left
       </span>
       <nav className="filter" data-cy="Filter">
-        {FILTERS.map(({ value, label, href }) => (
+        {FILTERS.map(({ value, label, href, dataCy }) => (
           <a
             key={value}
             href={href}
-            className={`filter__link ${filter === value ? 'selected' : ''}`}
-            data-cy={
-              value === Filter.All
-                ? 'FilterLinkAll'
-                : value === Filter.Active
-                  ? 'FilterLinkActive'
-                  : 'FilterLinkCompleted'
-            }
+            className={cn('filter__link', {
+              selected: filter === value,
+            })}
+            data-cy={dataCy}
             onClick={() => onFilterChange(value)}
           >
             {label}
@@ -52,7 +59,6 @@ export const Footer: React.FC<Props> = ({
         ))}
       </nav>
 
-      {/* {completedTodosCount > 0 && ( */}
       <button
         type="button"
         className="todoapp__clear-completed"
@@ -62,7 +68,6 @@ export const Footer: React.FC<Props> = ({
       >
         Clear completed
       </button>
-      {/* )} */}
     </footer>
   );
 };
