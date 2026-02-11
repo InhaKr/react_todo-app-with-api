@@ -15,18 +15,9 @@ export const createTodo = ({ title }: { title: string }) => {
   });
 };
 
-// const wait = (ms: number) =>
-//   new Promise(resolve => setTimeout(resolve, ms));
-
 export const deleteTodo = (todoId: number) => {
   return client.delete(`/todos/${todoId}`);
 };
-
-// export const deleteTodo = async (id: number) => {
-//   await wait(1500); //задержка
-
-//   return client.delete(`/todos/${id}`);
-// };
 
 export const updateTodo = (id: number, data: Partial<Todo>) => {
   return client.patch<Todo>(`/todos/${id}`, data);

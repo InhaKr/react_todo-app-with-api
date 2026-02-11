@@ -25,7 +25,6 @@ export const TodoItem: React.FC<Props> = ({
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
-      // inputRef.current.select();
       shouldSubmitOnBlur.current = true;
     }
   }, [isEditing]);
@@ -42,7 +41,6 @@ export const TodoItem: React.FC<Props> = ({
     if (!trimmed) {
       onDelete?.(todo.id);
 
-      // setIsEditing(false);
       return;
     }
 
