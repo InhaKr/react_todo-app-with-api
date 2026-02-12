@@ -6,8 +6,8 @@ interface Props {
   todos: Todo[];
   loadingIds: number[];
   onToggle: (todo: Todo) => void;
-  onDelete: (id: number) => void;
-  onUpdate: (id: number, title: string) => void;
+  onDelete: (id: number) => Promise<void>;
+  onUpdate: (id: number, title: string) => Promise<void>;
 }
 
 export const TodoList: React.FC<Props> = ({

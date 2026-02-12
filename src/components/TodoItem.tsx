@@ -6,8 +6,9 @@ interface Props {
   todo: Todo;
   isLoading?: boolean;
   onToggle?: (todo: Todo) => void;
-  onDelete?: (id: number) => void;
-  onUpdate?: (id: number, title: string) => void;
+  onDelete?: (id: number) => Promise<void>;
+  onUpdate?: (id: number, title: string) => Promise<void>;
+  onEditingDone?: () => void;
 }
 
 export const TodoItem: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const TodoItem: React.FC<Props> = ({
   onToggle,
   onDelete,
   onUpdate,
+  onEditingDone,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(todo.title);
@@ -36,17 +38,23 @@ export const TodoItem: React.FC<Props> = ({
   const handleSubmit = () => {
     const trimmed = editedTitle.trim();
 
-    setIsEditing(false);
-
     if (!trimmed) {
-      onDelete?.(todo.id);
+      onDelete?.(todo.id)?.then(() => {
+        setIsEditing(false);
+      });
 
       return;
     }
 
-    if (trimmed !== todo.title) {
-      onUpdate?.(todo.id, trimmed);
+    if (trimmed == todo.title) {
+      setIsEditing(false);
+
+      return;
     }
+
+    onUpdate?.(todo.id, trimmed)?.then(() => {
+      setIsEditing(false);
+    });
   };
 
   const handleCancel = () => {
@@ -80,6 +88,7 @@ export const TodoItem: React.FC<Props> = ({
 
   return (
     <li
+      data-cy="Todo"
       className={cn('todo', {
         completed: todo.completed,
         editing: isEditing,
@@ -88,6 +97,7 @@ export const TodoItem: React.FC<Props> = ({
       <div className="todo__view">
         <label className="todo__status-label ">
           <input
+            data-cy="TodoStatus"
             type="checkbox"
             className="todo__status"
             checked={todo.completed}
@@ -101,6 +111,7 @@ export const TodoItem: React.FC<Props> = ({
 
         {isEditing ? (
           <input
+            data-cy="TodoTitleField"
             ref={inputRef}
             className="todo__title-field"
             value={editedTitle}
@@ -111,13 +122,18 @@ export const TodoItem: React.FC<Props> = ({
           />
         ) : (
           <>
-            <span className="todo__title" onDoubleClick={handleDoubleClick}>
+            <span
+              data-cy="TodoTitle"
+              className="todo__title"
+              onDoubleClick={handleDoubleClick}
+            >
               {todo.title}
             </span>
 
             <button
               type="button"
               className="todo__remove"
+              data-cy="TodoDelete"
               disabled={isLoading}
               onClick={() => onDelete?.(todo.id)}
             >
@@ -127,12 +143,13 @@ export const TodoItem: React.FC<Props> = ({
         )}
       </div>
 
-      {isLoading && (
-        <div className="modal overlay is-active">
-          <div className="modal-background has-background-white-ter" />
-          <div className="loader" />
-        </div>
-      )}
+      <div
+        data-cy="TodoLoader"
+        className={cn('modal overlay', { 'is-active': isLoading })}
+      >
+        <div className="modal-background has-background-white-ter" />
+        <div className="loader" />
+      </div>
     </li>
   );
 };

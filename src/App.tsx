@@ -92,15 +92,18 @@ export const App: React.FC = () => {
       });
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number): Promise<void> => {
     hideError();
     setLoadingIds(prev => [...prev, id]);
 
-    deleteTodo(id)
+    return deleteTodo(id)
       .then(() => {
         setTodos(prev => prev.filter(todo => todo.id !== id));
       })
-      .catch(() => showError(ErrorMessage.DELETE))
+      .catch(() => {
+        showError(ErrorMessage.DELETE);
+        throw new Error();
+      })
       .finally(() => {
         setLoadingIds(prev => prev.filter(tid => tid !== id));
         inputRef.current?.focus();
@@ -186,7 +189,7 @@ export const App: React.FC = () => {
 
     setLoadingIds(prev => [...prev, id]);
 
-    updateTodo(id, { title: newTitle })
+    return updateTodo(id, { title: newTitle })
       .then(updated => {
         setTodos(prev =>
           prev.map(todo => (todo.id === updated.id ? updated : todo)),
@@ -201,6 +204,7 @@ export const App: React.FC = () => {
             todo.id === id ? { ...todo, title: prevTitle } : todo,
           ),
         );
+        throw new Error();
       })
       .finally(() => {
         setLoadingIds(prev => prev.filter(tid => tid !== id));
@@ -268,7 +272,8 @@ export const App: React.FC = () => {
           inputRef={inputRef}
           disabled={isSubmitting}
           onToggleAll={toggleAll}
-          isAllCompleted={activeTodosCount === 0}
+          hasTodos={hasTodos}
+          isAllCompleted={todos.length > 0 && activeTodosCount === 0}
         />
 
         {hasTodos && (

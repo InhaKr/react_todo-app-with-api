@@ -9,6 +9,7 @@ interface Props {
   disabled: boolean;
   onToggleAll: () => void;
   isAllCompleted: boolean;
+  hasTodos: boolean;
 }
 
 export const Header: React.FC<Props> = ({
@@ -19,16 +20,19 @@ export const Header: React.FC<Props> = ({
   disabled,
   onToggleAll,
   isAllCompleted,
+  hasTodos,
 }) => {
   return (
     <header className="todoapp__header">
       <form onSubmit={onSubmit}>
-        <button
-          type="button"
-          className={cn('todoapp__toggle-all', { active: isAllCompleted })}
-          data-cy="ToggleAllButton"
-          onClick={onToggleAll}
-        ></button>
+        {hasTodos && (
+          <button
+            type="button"
+            className={cn('todoapp__toggle-all', { active: isAllCompleted })}
+            data-cy="ToggleAllButton"
+            onClick={onToggleAll}
+          ></button>
+        )}
         <input
           ref={inputRef}
           value={title}
